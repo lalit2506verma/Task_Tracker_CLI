@@ -3,7 +3,7 @@ import Service.TaskManager;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         TaskManagerImpl taskManager = new TaskManagerImpl();
 
@@ -21,7 +21,8 @@ public class Main {
                     System.out.println("Usage: Task_Tracker_CLI ADD <description>");
                     return;
                 }
-                taskManager.addTask(args[1]);
+                int id = taskManager.addTask(args[1]);
+                System.out.println("Task added successfully (ID: " + id + ")");
                 break;
 
             // Example "update 1 "Buy groceries and cook dinner""
@@ -31,6 +32,7 @@ public class Main {
                     return;
                 }
                 taskManager.updateTask(Integer.parseInt(args[1]), args[2]);
+                System.out.println("Task updated successfully");
                 break;
 
             // Example "delete 1"
@@ -40,6 +42,7 @@ public class Main {
                     return;
                 }
                 taskManager.deleteTask(Integer.parseInt(args[1]));
+                System.out.println("Task deleted successfully");
                 break;
 
         }

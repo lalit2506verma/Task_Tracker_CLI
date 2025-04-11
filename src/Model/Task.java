@@ -3,22 +3,30 @@ package Model;
 import java.time.LocalDateTime;
 
 public class Task {
-    private int lastID = 0;
+    private static int lastID = 0;
     private int id;
     private String description;
-    private String status;
+    private TaskStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public Task() {
     }
 
-    public Task (String description, String status) {
+    public Task (String description) {
         this.id = ++lastID;
         this.description = description;
-        this.status = status;
+        this.status = TaskStatus.TO_DO;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public Task(int id, TaskStatus status, String description, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.description = description;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public int getId() {
@@ -37,11 +45,11 @@ public class Task {
         this.description = description;
     }
 
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 
@@ -70,5 +78,10 @@ public class Task {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
+    }
+
+    public void updateTask(String description){
+        this.description = description;
+        this.updatedAt = LocalDateTime.now();
     }
 }
