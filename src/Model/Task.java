@@ -1,6 +1,7 @@
 package Model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Task {
     private static int lastID = 0;
@@ -9,6 +10,9 @@ public class Task {
     private TaskStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    // DateTimeFormatter for serializing/deserializing dates
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public Task() {
     }
@@ -83,5 +87,25 @@ public class Task {
     public void updateTask(String description){
         this.description = description;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void markInProgress(){
+        this.status = TaskStatus.IN_PROGRESS;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void markDone() {
+        this.status = TaskStatus.DONE;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public String toJson() {
+        return "{"
+                + "\"id\":" + id + ","
+                + "\"status\":\"" + status.toString() + "\","
+                + "\"description\":\"" + description.strip() + "\","
+                + "\"createdAt\":\"" + createdAt.format(formatter) + "\","
+                + "\"updatedAt\":\"" + updatedAt.format(formatter) + "\""
+                + "}";
     }
 }

@@ -11,4 +11,9 @@ public interface TaskManager {
     // Method to deleteTask
     public void deleteTask(int taskID) throws Exception;
 
+    // Method to mark Task In-Progress
+    public void markInProgress(int taskID) throws Exception;
+
+    // Method to mark Task Done
+    public void markDone(int taskID) throws Exception;
 }

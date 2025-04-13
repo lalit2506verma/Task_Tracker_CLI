@@ -45,7 +45,29 @@ public class Main {
                 System.out.println("Task deleted successfully");
                 break;
 
+            case "mark-in-progress":
+                if(args.length < 2){
+                    System.out.println("Usage: Task_Tracker_CLI MARK-IN-PROGRESS <id>");
+                    return;
+                }
+                taskManager.markInProgress(Integer.parseInt(args[1]));
+                System.out.println("Task is marked as In-progress");
+                break;
+
+            case "mark-done":
+                if(args.length < 2){
+                    System.out.println("Usage: Task_Tracker_CLI MARK-IN-PROGRESS <id>");
+                    return;
+                }
+
+                taskManager.markDone(Integer.parseInt(args[1]));
+                System.out.println("Task is marked as Done");
+                break;
+
+
         }
+
+        taskManager.saveTask();
 
     }
 }

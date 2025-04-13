@@ -1,7 +1,6 @@
 package Impl;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,7 +16,7 @@ import Service.TaskManager;
 
 public class TaskManagerImpl implements TaskManager {
 
-    private final Path jsonFilePath = Path.of("Tasks.json");
+    private final Path JSON_FILE_PATH = Path.of("Tasks.json");
     private List<Task> tasksList;
 
     DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -28,7 +27,14 @@ public class TaskManagerImpl implements TaskManager {
 
     private List<Task> loadTask() {
         // check if does not exists
-        if(!Files.exists(jsonFilePath)){
+        if(!Files.exists(JSON_FILE_PATH)){
+            try{
+                Files.createFile(JSON_FILE_PATH);
+            }
+            catch (IOException e) {
+                System.out.println("An error occurred while creating the file.");
+                throw new RuntimeException(e);
+            }
             return new ArrayList<>();
         }
         List<Task> existing_tasks = new ArrayList<>();
@@ -90,7 +96,6 @@ public class TaskManagerImpl implements TaskManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return existing_tasks;
     }
 
@@ -117,6 +122,28 @@ public class TaskManagerImpl implements TaskManager {
             throw new Exception("task ID not found");
         }
         tasksList.remove(task);
+        // Delete if Task.json is empty
+        if(tasksList.isEmpty()){
+            Files.deleteIfExists(JSON_FILE_PATH);
+        }
+    }
+
+    @Override
+    public void markInProgress(int taskID) throws Exception {
+        Task task = findTask(taskID);
+        if(task == null){
+            throw new Exception("Task ID not found");
+        }
+        task.markInProgress();
+    }
+
+    @Override
+    public void markDone(int taskID) throws Exception {
+        Task task = findTask(taskID);
+        if(task == null){
+            throw new Exception("Task ID not found");
+        }
+        task.markDone();
     }
 
     public Task findTask(int id){
@@ -126,5 +153,30 @@ public class TaskManagerImpl implements TaskManager {
             }
         }
         return null;
+    }
+
+    public void saveTask(){
+        if(!Files.exists(JSON_FILE_PATH)){
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+
+        for (int i = 0; i < tasksList.size(); i++) {
+            sb.append(tasksList.get(i).toJson());
+            if(i < tasksList.size() - 1){
+                sb.append(",");
+            }
+        }
+
+        sb.append("\n]");
+
+        String jsonFormat = sb.toString();
+        try{
+            Files.writeString(JSON_FILE_PATH, jsonFormat);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
