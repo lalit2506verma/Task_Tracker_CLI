@@ -1,11 +1,15 @@
+import java.util.List;
+
 import Impl.TaskManagerImpl;
+import Model.Task;
+import Model.TaskStatus;
 import Service.TaskManager;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        TaskManagerImpl taskManager = new TaskManagerImpl();
+        TaskManager taskManager = new TaskManagerImpl();
 
         if(args.length < 1){
             System.out.println("Usage: Task_Tracker_CLI command <description> [argument]");
@@ -64,10 +68,43 @@ public class Main {
                 System.out.println("Task is marked as Done");
                 break;
 
+            case "list":
+                List<Task> list;
+                if(args.length < 2){
+                    // All task need to be fetched from Task.json
+                    list =  taskManager.listTasks("All");
+                }
+                else{
+                    TaskStatus status;
 
+                    try{
+                        status = TaskStatus.valueOf(args[1].toUpperCase().replace("-", "_"));
+                    }
+                    catch (IllegalArgumentException e){
+                        System.out.println("Invalid Status");
+                        e.printStackTrace();
+                        return;
+                    }
+                    list = taskManager.listTasks(status.toString());
+                }
+
+                if(list.isEmpty()){
+                    System.out.println("No Task Found");
+                    return;
+                }
+
+                // print list
+                for (int i = 0; i < list.size(); i++) {
+                    System.out.println(list.get(i).toString());
+                }
+                break;
+
+            default:
+                System.out.println("Invalid Command!!");
+                break;
         }
 
-        taskManager.saveTask();
+        taskManager.saveTasks();
 
     }
 }

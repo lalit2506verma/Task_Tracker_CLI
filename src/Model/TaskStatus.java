@@ -2,7 +2,7 @@ package Model;
 
 public enum TaskStatus {
     DONE("Done"),
-    TO_DO("To-do"),
+    TODO("Todo"),
     IN_PROGRESS("In-Progress");
 
     private final String value;

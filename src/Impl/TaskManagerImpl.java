@@ -146,6 +146,23 @@ public class TaskManagerImpl implements TaskManager {
         task.markDone();
     }
 
+    @Override
+    public List<Task> listTasks(String status) {
+        List<Task> list = new ArrayList<>();
+
+        if(status.equals("All")){
+            return tasksList;
+        }
+
+        for(Task task : tasksList){
+            String taskStatus = task.getStatus().toString().strip();
+            if(taskStatus.equals(status)){
+                list.add(task);
+            }
+        }
+        return list;
+    }
+
     public Task findTask(int id){
         for (Task task: tasksList){
             if(task.getId() == id){
@@ -155,7 +172,7 @@ public class TaskManagerImpl implements TaskManager {
         return null;
     }
 
-    public void saveTask(){
+    public void saveTasks(){
         if(!Files.exists(JSON_FILE_PATH)){
             return;
         }
